@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gıybetspor Mega Link Paneli</title>
+    <title>Gıybetspor Link Oluşturma Paneli</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a1a; color: white; }
         .panel { background: #2d2d2d; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 450px; text-align: center; border: 1px solid #444; }
@@ -19,18 +19,18 @@
 <body>
 
 <div id="redirectMode" style="display:none;">
-    <h2 style="color:white;">Gıybetspor Evrenine Işınlanıyorsun...</h2>
+    <h2 style="color:white;">Gıybetspor Youtube Kanalına Bağlanıyor</h2>
     <div style="border: 4px solid #f3f3f3; border-top: 4px solid #ff0000; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto;"></div>
 </div>
 
 <div id="panelMode" class="panel" style="display:none;">
-    <h2>🚀 MEGA LİNK ÜRETİCİ</h2>
-    <p style="font-size: 13px; color: #aaa;">Normal, Shorts, Canlı Yayın veya Mobil linki yapıştır:</p>
-    <input type="text" id="ytLink" placeholder="YouTube linkini buraya bırak...">
-    <button onclick="generateLink()">LİNK OLUŞTUR</button>
+    <h2>🚀 Gıybetspor Link Üretici</h2>
+    <p style="font-size: 13px; color: #aaa;">Gıybetspor Youtube video linkini yapıştır:</p>
+    <input type="text" id="ytLink" placeholder="YouTube linkini buraya yapıştır">
+    <button onclick="generateLink()">Link Oluştur</button>
     
     <div id="resultArea" class="result">
-        <p style="font-size: 11px; color: #ccc; margin: 0 0 10px 0;">Instagram'a bu linki yapıştır:</p>
+        <p style="font-size: 11px; color: #ccc; margin: 0 0 10px 0;">Yeni Gıybetspor Linki:</p>
         <strong id="finalLink" style="color:#00d4ff; word-wrap: break-word; font-size: 14px;"></strong>
     </div>
 </div>
@@ -84,7 +84,7 @@
             document.getElementById('finalLink').innerText = final;
             document.getElementById('resultArea').style.display = 'block';
         } else {
-            alert("❌ YouTube ID'si bulunamadı! Lütfen geçerli bir video, shorts veya canlı yayın linki yapıştırın.");
+            alert("❌ Gıybetspor YouTube video ID'si bulunamadı! Lütfen geçerli bir video, shorts veya canlı yayın linki yapıştırın!");
         }
     }
 </script>
