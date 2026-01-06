@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gıybetspor Link Oluşturma Paneli</title>
+    <title>Gıybetspor Link Paneli</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a1a; color: white; }
-        .panel { background: #2d2d2d; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 450px; text-align: center; border: 1px solid #444; }
-        h2 { color: #ff0000; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        input { width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #444; border-radius: 10px; background: #1a1a1a; color: white; font-size: 14px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #ff0000; }
-        button { background: #ff0000; color: white; border: none; padding: 15px 25px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #cc0000; transform: translateY(-2px); }
-        .result { margin-top: 25px; padding: 15px; background: #3d3d3d; border-radius: 10px; border-left: 5px solid #ff0000; display: none; text-align: left; }
-        .copy-btn { background: #007bff; margin-top: 10px; font-size: 12px; padding: 8px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #121212; color: white; }
+        .panel { background: #1e1e1e; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 90%; max-width: 450px; text-align: center; border: 2px solid #ffcb70; }
+        h2 { color: #ffcb70; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+        input { width: 100%; padding: 15px; margin: 15px 0; border: 1px solid #333; border-radius: 12px; background: #121212; color: white; font-size: 14px; outline: none; transition: 0.3s; box-sizing: border-box; }
+        input:focus { border-color: #ffcb70; }
+        button { background: #ffcb70; color: #121212; border: none; padding: 15px 25px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #e6b765; transform: translateY(-2px); }
+        .result { margin-top: 25px; padding: 20px; background: #2a2a2a; border-radius: 12px; border: 1px dashed #ffcb70; display: none; animation: fadeIn 0.5s; }
+        .final-link-text { color: #ffcb70; word-wrap: break-word; font-size: 14px; font-family: monospace; display: block; margin-bottom: 15px; }
+        .copy-btn { background: #444; color: white; padding: 10px; font-size: 13px; width: auto; display: inline-block; }
+        .copy-btn.success { background: #28a745; color: white; }
+        
+        /* Yönlendirme Modu */
+        #redirectMode { text-align: center; display: none; }
+        .spinner { border: 4px solid rgba(255, 203, 112, 0.1); border-top: 4px solid #ffcb70; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="redirectMode" style="display:none;">
-    <h2 style="color:white;">Gıybetspor Youtube Kanalına Bağlanıyor</h2>
-    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #ff0000; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto;"></div>
+<div id="redirectMode">
+    <h2 style="color:#ffcb70;">Gıybetspor</h2>
+    <p>YouTube Uygulamasına Aktarılıyorsun...</p>
+    <div class="spinner"></div>
 </div>
 
-<div id="panelMode" class="panel" style="display:none;">
-    <h2>🚀 Gıybetspor Link Üretici</h2>
-    <p style="font-size: 13px; color: #aaa;">Gıybetspor Youtube video linkini yapıştır:</p>
-    <input type="text" id="ytLink" placeholder="YouTube linkini buraya yapıştır">
-    <button onclick="generateLink()">Link Oluştur</button>
+<div id="panelMode" class="panel">
+    <h2>🚀 LİNK ÜRETİCİ</h2>
+    <input type="text" id="ytLink" placeholder="YouTube, Shorts veya Canlı Yayın linkini buraya yapıştır">
+    <button onclick="generateLink()">LİNK OLUŞTUR</button>
     
     <div id="resultArea" class="result">
-        <p style="font-size: 11px; color: #ccc; margin: 0 0 10px 0;">Yeni Gıybetspor Linki:</p>
-        <strong id="finalLink" style="color:#00d4ff; word-wrap: break-word; font-size: 14px;"></strong>
+        <strong id="finalLink" class="final-link-text"></strong>
+        <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">LİNKİ KOPYALA</button>
     </div>
 </div>
-
-<style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,49 +49,46 @@
     const myBaseUrl = window.location.origin + window.location.pathname;
 
     if (videoID) {
+        document.getElementById('panelMode').style.display = 'none';
         document.getElementById('redirectMode').style.display = 'block';
-        // Uygulama ve Web linkleri
         var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
         var webLink = "https://www.youtube.com/watch?v=" + videoID;
-        
         window.location.href = appLink;
         setTimeout(function() { window.location.href = webLink; }, 2500);
-    } else {
-        document.getElementById('panelMode').style.display = 'block';
     }
 
     function generateLink() {
         const input = document.getElementById('ytLink').value.trim();
         let id = "";
         
-        // GELİŞMİŞ AYIKLAMA MANTIĞI
         if (input.includes("v=")) {
-            // Standart: youtube.com/watch?v=ID
             id = input.split("v=")[1].split("&")[0];
         } else if (input.includes("shorts/")) {
-            // Shorts: youtube.com/shorts/ID
             id = input.split("shorts/")[1].split(/[?&]/)[0];
         } else if (input.includes("live/")) {
-            // Canlı Yayın: youtube.com/live/ID
             id = input.split("live/")[1].split(/[?&]/)[0];
         } else if (input.includes("youtu.be/")) {
-            // Mobil: youtu.be/ID
             id = input.split("youtu.be/")[1].split(/[?&]/)[0];
-        } else if (input.includes("youtube.com/embed/")) {
-            // Embed: youtube.com/embed/ID
-            id = input.split("embed/")[1].split(/[?&]/)[0];
-        } else if (input.includes("youtube.com/v/")) {
-            // Eski tip: youtube.com/v/ID
-            id = input.split("v/")[1].split(/[?&]/)[0];
         }
 
         if (id && id.length > 5) {
             const final = myBaseUrl + "?v=" + id;
             document.getElementById('finalLink').innerText = final;
             document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('copyBtn').innerText = "LİNKİ KOPYALA";
+            document.getElementById('copyBtn').classList.remove('success');
         } else {
-            alert("❌ Gıybetspor YouTube video ID'si bulunamadı! Lütfen geçerli bir video, shorts veya canlı yayın linki yapıştırın!");
+            alert("❌ Geçersiz YouTube linki!");
         }
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('finalLink').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "KOPYALANDI! ✅";
+            btn.classList.add('success');
+        });
     }
 </script>
 </body>
