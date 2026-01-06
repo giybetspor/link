@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gıybetspor Link Paneli</title>
+    <title>Gıybetspor Mega Link Paneli</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f4f4f4; }
-        .panel { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { background: #ff0000; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-        .result { margin-top: 20px; padding: 10px; background: #e7f3ff; border-radius: 8px; word-break: break-all; display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a1a; color: white; }
+        .panel { background: #2d2d2d; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 450px; text-align: center; border: 1px solid #444; }
+        h2 { color: #ff0000; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        input { width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #444; border-radius: 10px; background: #1a1a1a; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus { border-color: #ff0000; }
+        button { background: #ff0000; color: white; border: none; padding: 15px 25px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #cc0000; transform: translateY(-2px); }
+        .result { margin-top: 25px; padding: 15px; background: #3d3d3d; border-radius: 10px; border-left: 5px solid #ff0000; display: none; text-align: left; }
+        .copy-btn { background: #007bff; margin-top: 10px; font-size: 12px; padding: 8px; }
     </style>
 </head>
 <body>
 
 <div id="redirectMode" style="display:none;">
-    <h2>Gıybetspor evrenine ışınlanıyorsun...</h2>
+    <h2 style="color:white;">Gıybetspor Evrenine Işınlanıyorsun...</h2>
+    <div style="border: 4px solid #f3f3f3; border-top: 4px solid #ff0000; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto;"></div>
 </div>
 
 <div id="panelMode" class="panel" style="display:none;">
-    <h2 style="color:#ff0000;">🚀 Link Üretici</h2>
-    <p>YouTube Linkini Yapıştır:</p>
-    <input type="text" id="ytLink" placeholder="https://www.youtube.com/watch?v=...">
-    <button onclick="generateLink()">Link Oluştur</button>
+    <h2>🚀 MEGA LİNK ÜRETİCİ</h2>
+    <p style="font-size: 13px; color: #aaa;">Normal, Shorts, Canlı Yayın veya Mobil linki yapıştır:</p>
+    <input type="text" id="ytLink" placeholder="YouTube linkini buraya bırak...">
+    <button onclick="generateLink()">LİNK OLUŞTUR</button>
+    
     <div id="resultArea" class="result">
-        <p style="font-size: 12px; color: #555;">Instagram'a bu linki yapıştır:</p>
-        <strong id="finalLink"></strong>
+        <p style="font-size: 11px; color: #ccc; margin: 0 0 10px 0;">Instagram'a bu linki yapıştır:</p>
+        <strong id="finalLink" style="color:#00d4ff; word-wrap: break-word; font-size: 14px;"></strong>
     </div>
 </div>
+
+<style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -35,33 +43,48 @@
     const myBaseUrl = window.location.origin + window.location.pathname;
 
     if (videoID) {
-        // YÖNLENDİRME MODU
         document.getElementById('redirectMode').style.display = 'block';
+        // Uygulama ve Web linkleri
         var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
         var webLink = "https://www.youtube.com/watch?v=" + videoID;
+        
         window.location.href = appLink;
         setTimeout(function() { window.location.href = webLink; }, 2500);
     } else {
-        // PANEL MODU
         document.getElementById('panelMode').style.display = 'block';
     }
 
     function generateLink() {
-        const input = document.getElementById('ytLink').value;
+        const input = document.getElementById('ytLink').value.trim();
         let id = "";
         
+        // GELİŞMİŞ AYIKLAMA MANTIĞI
         if (input.includes("v=")) {
+            // Standart: youtube.com/watch?v=ID
             id = input.split("v=")[1].split("&")[0];
+        } else if (input.includes("shorts/")) {
+            // Shorts: youtube.com/shorts/ID
+            id = input.split("shorts/")[1].split(/[?&]/)[0];
+        } else if (input.includes("live/")) {
+            // Canlı Yayın: youtube.com/live/ID
+            id = input.split("live/")[1].split(/[?&]/)[0];
         } else if (input.includes("youtu.be/")) {
-            id = input.split("youtu.be/")[1].split("?")[0];
+            // Mobil: youtu.be/ID
+            id = input.split("youtu.be/")[1].split(/[?&]/)[0];
+        } else if (input.includes("youtube.com/embed/")) {
+            // Embed: youtube.com/embed/ID
+            id = input.split("embed/")[1].split(/[?&]/)[0];
+        } else if (input.includes("youtube.com/v/")) {
+            // Eski tip: youtube.com/v/ID
+            id = input.split("v/")[1].split(/[?&]/)[0];
         }
 
-        if (id) {
+        if (id && id.length > 5) {
             const final = myBaseUrl + "?v=" + id;
             document.getElementById('finalLink').innerText = final;
             document.getElementById('resultArea').style.display = 'block';
         } else {
-            alert("Geçersiz YouTube linki!");
+            alert("❌ YouTube ID'si bulunamadı! Lütfen geçerli bir video, shorts veya canlı yayın linki yapıştırın.");
         }
     }
 </script>
