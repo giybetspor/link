@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Giybetspor'a Gidiyorsun...</title>
+    <title>Gıybetspor Yönlendirici</title>
     <meta charset="UTF-8">
 </head>
 <body>
     <script>
-        // BURAYI DEGISTIR: Youtube video ID'ni tırnak içine yaz
-        var videoID = "dQw4w9WgXcQ"; 
+        // Linkten video ID'sini çekiyoruz
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoID = urlParams.get('v');
 
-        var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
-        var webLink = "https://www.youtube.com/watch?v=" + videoID;
+        if (videoID) {
+            var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
+            var webLink = "https://www.youtube.com/watch?v=" + videoID;
 
-        // Uygulamayı tetikle
-        window.location.href = appLink;
+            // Uygulamayı tetikle
+            window.location.href = appLink;
 
-        // Eğer uygulama açılmazsa 2 saniye sonra tarayıcıdan aç
-        setTimeout(function() {
-            window.location.href = webLink;
-        }, 2500);
+            // Uygulama yoksa tarayıcıdan devam et
+            setTimeout(function() {
+                window.location.href = webLink;
+            }, 2500);
+        } else {
+            document.body.innerHTML = '<h2 style="text-align:center; font-family:sans-serif; margin-top:50px;">Hata: Video ID bulunamadı!</h2>';
+        }
     </script>
-    <p style="text-align:center; font-family:sans-serif; margin-top:50px;">
-        YouTube Uygulaması Açılıyor... <br> Açılmazsa <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">buraya tıkla.</a>
+    <p id="msg" style="text-align:center; font-family:sans-serif; margin-top:50px;">
+        YouTube Uygulaması Açılıyor
     </p>
 </body>
 </html>
