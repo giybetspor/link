@@ -1,32 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Gıybetspor Yönlendirici</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gıybetspor Link Paneli</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f4f4f4; }
+        .panel { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { background: #ff0000; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+        .result { margin-top: 20px; padding: 10px; background: #e7f3ff; border-radius: 8px; word-break: break-all; display: none; }
+    </style>
 </head>
 <body>
-    <script>
-        // Linkten video ID'sini çekiyoruz
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoID = urlParams.get('v');
 
-        if (videoID) {
-            var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
-            var webLink = "https://www.youtube.com/watch?v=" + videoID;
+<div id="redirectMode" style="display:none;">
+    <h2>Gıybetspor evrenine ışınlanıyorsun...</h2>
+</div>
 
-            // Uygulamayı tetikle
-            window.location.href = appLink;
+<div id="panelMode" class="panel" style="display:none;">
+    <h2 style="color:#ff0000;">🚀 Link Üretici</h2>
+    <p>YouTube Linkini Yapıştır:</p>
+    <input type="text" id="ytLink" placeholder="https://www.youtube.com/watch?v=...">
+    <button onclick="generateLink()">Link Oluştur</button>
+    <div id="resultArea" class="result">
+        <p style="font-size: 12px; color: #555;">Instagram'a bu linki yapıştır:</p>
+        <strong id="finalLink"></strong>
+    </div>
+</div>
 
-            // Uygulama yoksa tarayıcıdan devam et
-            setTimeout(function() {
-                window.location.href = webLink;
-            }, 2500);
-        } else {
-            document.body.innerHTML = '<h2 style="text-align:center; font-family:sans-serif; margin-top:50px;">Hata: Video ID bulunamadı!</h2>';
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoID = urlParams.get('v');
+    const myBaseUrl = window.location.origin + window.location.pathname;
+
+    if (videoID) {
+        // YÖNLENDİRME MODU
+        document.getElementById('redirectMode').style.display = 'block';
+        var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
+        var webLink = "https://www.youtube.com/watch?v=" + videoID;
+        window.location.href = appLink;
+        setTimeout(function() { window.location.href = webLink; }, 2500);
+    } else {
+        // PANEL MODU
+        document.getElementById('panelMode').style.display = 'block';
+    }
+
+    function generateLink() {
+        const input = document.getElementById('ytLink').value;
+        let id = "";
+        
+        if (input.includes("v=")) {
+            id = input.split("v=")[1].split("&")[0];
+        } else if (input.includes("youtu.be/")) {
+            id = input.split("youtu.be/")[1].split("?")[0];
         }
-    </script>
-    <p id="msg" style="text-align:center; font-family:sans-serif; margin-top:50px;">
-        YouTube Uygulaması Açılıyor
-    </p>
+
+        if (id) {
+            const final = myBaseUrl + "?v=" + id;
+            document.getElementById('finalLink').innerText = final;
+            document.getElementById('resultArea').style.display = 'block';
+        } else {
+            alert("Geçersiz YouTube linki!");
+        }
+    }
+</script>
 </body>
 </html>
