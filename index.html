@@ -14,10 +14,9 @@
         button:hover { background: #e6b765; transform: translateY(-2px); }
         .result { margin-top: 25px; padding: 20px; background: #2a2a2a; border-radius: 12px; border: 1px dashed #ffcb70; display: none; animation: fadeIn 0.5s; }
         .final-link-text { color: #ffcb70; word-wrap: break-word; font-size: 14px; font-family: monospace; display: block; margin-bottom: 15px; }
-        .copy-btn { background: #444; color: white; padding: 10px; font-size: 13px; width: auto; display: inline-block; }
-        .copy-btn.success { background: #28a745; color: white; }
+        .copy-btn { background: #444; color: white; padding: 10px; font-size: 13px; border-radius: 8px; cursor: pointer; border:none; }
+        .copy-btn.success { background: #28a745; }
         
-        /* Yönlendirme Modu */
         #redirectMode { text-align: center; display: none; }
         .spinner { border: 4px solid rgba(255, 203, 112, 0.1); border-top: 4px solid #ffcb70; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -28,13 +27,13 @@
 
 <div id="redirectMode">
     <h2 style="color:#ffcb70;">Gıybetspor</h2>
-    <p>YouTube Uygulamasına Aktarılıyorsun...</p>
+    <p>YouTube Uygulaması Zorlanıyor...</p>
     <div class="spinner"></div>
 </div>
 
 <div id="panelMode" class="panel">
     <h2>🚀 LİNK ÜRETİCİ</h2>
-    <input type="text" id="ytLink" placeholder="YouTube, Shorts veya Canlı Yayın linkini buraya yapıştır">
+    <input type="text" id="ytLink" placeholder="YouTube linkini buraya yapıştır">
     <button onclick="generateLink()">LİNK OLUŞTUR</button>
     
     <div id="resultArea" class="result">
@@ -51,25 +50,34 @@
     if (videoID) {
         document.getElementById('panelMode').style.display = 'none';
         document.getElementById('redirectMode').style.display = 'block';
-        var appLink = "youtube://www.youtube.com/watch?v=" + videoID;
-        var webLink = "https://www.youtube.com/watch?v=" + videoID;
-        window.location.href = appLink;
-        setTimeout(function() { window.location.href = webLink; }, 2500);
+
+        // 1. Yöntem: Standart Uygulama Protokolü (iOS ve Bazı Androidler)
+        var appUrl = "youtube://www.youtube.com/watch?v=" + videoID;
+        // 2. Yöntem: Android Intent (En Garanti Android Yöntemi)
+        var intentUrl = "intent://www.youtube.com/watch?v=" + videoID + "#Intent;package=com.google.android.youtube;scheme=https;end";
+        // 3. Yöntem: Web Yedek
+        var webUrl = "https://www.youtube.com/watch?v=" + videoID;
+
+        // Zincirleme Tetikleme
+        window.location.href = appUrl;
+
+        setTimeout(function() {
+            window.location.href = intentUrl;
+        }, 300);
+
+        setTimeout(function() {
+            window.location.href = webUrl;
+        }, 2000);
     }
 
     function generateLink() {
         const input = document.getElementById('ytLink').value.trim();
         let id = "";
         
-        if (input.includes("v=")) {
-            id = input.split("v=")[1].split("&")[0];
-        } else if (input.includes("shorts/")) {
-            id = input.split("shorts/")[1].split(/[?&]/)[0];
-        } else if (input.includes("live/")) {
-            id = input.split("live/")[1].split(/[?&]/)[0];
-        } else if (input.includes("youtu.be/")) {
-            id = input.split("youtu.be/")[1].split(/[?&]/)[0];
-        }
+        if (input.includes("v=")) { id = input.split("v=")[1].split("&")[0]; }
+        else if (input.includes("shorts/")) { id = input.split("shorts/")[1].split(/[?&]/)[0]; }
+        else if (input.includes("live/")) { id = input.split("live/")[1].split(/[?&]/)[0]; }
+        else if (input.includes("youtu.be/")) { id = input.split("youtu.be/")[1].split(/[?&]/)[0]; }
 
         if (id && id.length > 5) {
             const final = myBaseUrl + "?v=" + id;
@@ -78,7 +86,7 @@
             document.getElementById('copyBtn').innerText = "LİNKİ KOPYALA";
             document.getElementById('copyBtn').classList.remove('success');
         } else {
-            alert("❌ Geçersiz YouTube linki!");
+            alert("❌ Geçersiz link!");
         }
     }
 
